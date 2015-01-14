@@ -24,47 +24,43 @@ diff -ruN xscreensaver-5.26.orig/hacks/config/tetris.xml xscreensaver-5.26/hacks
 diff -ruN xscreensaver-5.26.orig/hacks/glx/Makefile.in xscreensaver-5.26/hacks/glx/Makefile.in
 --- xscreensaver-5.26.orig/hacks/glx/Makefile.in	2013-07-16 11:23:33.000000000 +0200
 +++ xscreensaver-5.26/hacks/glx/Makefile.in	2013-10-11 14:49:14.000000000 +0200
-@@ -117,8 +117,8 @@
- 		  hilbert.c companion.c companion_quad.c companion_disc.c \
- 		  companion_heart.c tronbit.c tronbit_idle1.c tronbit_idle2.c \
- 		  tronbit_no.c tronbit_yes.c jwzgles.c kaleidocycle.c \
--		  quasicrystal.c unknownpleasures.c geodesic.c \
-+		  quasicrystal.c unknownpleasures.c geodesic.c tetris.c \
- 		  projectiveplane.c
- 
- OBJS		= xscreensaver-gl-helper.o normals.o glxfonts.o fps-gl.o \
+@@ -85,7 +85,8 @@
+ SRCS		= xscreensaver-gl-helper.c normals.c fps-gl.c \
+ 		  atlantis.c b_draw.c b_lockglue.c b_sphere.c bubble3d.c \
+ 		  buildlwo.c cage.c dolphin.c gears.c lament.c lament_model.c \
++		  tetris.c \
+ 		  moebius.c morph3d.c pipeobjs.c pipes.c rubik.c s1_1.c s1_2.c \
+ 		  s1_3.c s1_4.c s1_5.c s1_6.c s1_b.c shark.c sproingies.c \
+ 		  sproingiewrap.c stairs.c superquadrics.c swim.c whale.c \
+ 		  xlock-gl-utils.c xpm-ximage.c glplanet.c pulsar.c \
+@@ -127,7 +127,8 @@
+ OBJS		= xscreensaver-gl-helper.o normals.o fps-gl.o \
  		  atlantis.o b_draw.o b_lockglue.o b_sphere.o bubble3d.o \
-@@ -158,8 +158,8 @@
- 		  hilbert.o companion.o companion_quad.o companion_disc.o \
- 		  companion_heart.o tronbit.o tronbit_idle1.o tronbit_idle2.o \
- 		  tronbit_no.o tronbit_yes.o jwzgles.o kaleidocycle.o \
--		  quasicrystal.o unknownpleasures.o geodesic.o \
-+		  quasicrystal.o unknownpleasures.o geodesic.o tetris.o \
- 		  projectiveplane.o
- 
+ 		  buildlwo.o cage.o dolphin.o gears.o lament.o lament_model.o \
++		  tetris.o \
+ 		  moebius.o morph3d.o pipeobjs.o pipes.o rubik.o s1_1.o s1_2.o \
+ 		  s1_3.o s1_4.o s1_5.o s1_6.o s1_b.o shark.o sproingies.o \
+ 		  sproingiewrap.o stairs.o superquadrics.o swim.o whale.o \
+ 		  xlock-gl-utils.o xpm-ximage.o glplanet.o pulsar.o \
+@@ -169,7 +169,8 @@
  GL_EXES		= cage gears moebius pipes sproingies stairs superquadrics \
  		  morph3d rubik atlantis lament bubble3d glplanet pulsar \
-@@ -175,8 +175,8 @@
- 		  juggler3d topblock glschool glcells voronoi moebiusgears \
- 		  lockward cubicgrid hypnowheel skytentacles jigsaw photopile \
- 		  rubikblocks surfaces hilbert companioncube tronbit \
--		  kaleidocycle quasicrystal unknownpleasures geodesic \
-+		  kaleidocycle quasicrystal unknownpleasures geodesic tetris \
- 		  projectiveplane
- GLE_EXES	= extrusion
- SUID_EXES	= sonar
- GL_UTIL_EXES	= xscreensaver-gl-helper
-@@ -232,8 +232,8 @@
- 		  hypnowheel.man skytentacles.man sonar.man jigsaw.man \
- 		  photopile.man rubikblocks.man surfaces.man hilbert.man \
- 		  companioncube.man tronbit.man kaleidocycle.man \
--		  quasicrystal.man unknownpleasures.man geodesic.man \
-+		  quasicrystal.man unknownpleasures.man geodesic.man tetris.man \
- 		  projectiveplane.man
- MEN		= @GL_MEN@
- RETIRED_MEN	= glforestfire.man
- EXTRAS		= README Makefile.in dxf2gl.pl vrml2gl.pl wfront2gl.pl \
-@@ -696,6 +696,10 @@
+ 		  sierpinski3d gflux stonerview starwars gltext molecule \
++		  tetris \
+ 		  dangerball circuit menger engine flipscreen3d glsnake boxed \
+ 		  sballs cubenetic spheremonics lavalite queens \
+ 		  endgame glblur flurry atunnel flyingtoasters bouncingcow \
+ 		  glslideshow jigglypuff klein hypertorus glmatrix cubestorm \
+@@ -220,7 +220,8 @@
+ GL_MEN		= atlantis.man boxed.man bubble3d.man cage.man circuit.man \
+ 		  cubenetic.man dangerball.man engine.man extrusion.man \
+ 		  flipscreen3d.man gears.man gflux.man \
++		  tetris.man \
+ 		  glplanet.man glsnake.man gltext.man lament.man lavalite.man \
+ 		  menger.man moebius.man molecule.man morph3d.man pipes.man \
+ 		  pulsar.man queens.man rubik.man sballs.man sierpinski3d.man \
+ 		  spheremonics.man sproingies.man stairs.man starwars.man \
+@@ -749,6 +749,10 @@
  stonerview:	stonerview.o	$(STONER_OBJS) $(HACK_TRACK_OBJS)
  	$(CC_HACK) -o $@ $@.o	$(STONER_OBJS) $(HACK_TRACK_OBJS) $(HACK_LIBS)
  
@@ -1319,21 +1315,17 @@ diff -ruN xscreensaver-5.26.orig/hacks/glx/tetris.man xscreensaver-5.26/hacks/gl
 diff -ruN xscreensaver-5.26.orig/driver/XScreenSaver.ad.in xscreensaver-5.26/driver/XScreenSaver.ad.in
 --- xscreensaver-5.26.orig/driver/XScreenSaver.ad.in	2013-12-09 12:01:40.000000000 +0100
 +++ xscreensaver-5.26/driver/XScreenSaver.ad.in	2014-03-08 22:17:15.843647589 +0100
-@@ -360,10 +360,11 @@
- 				hexadrop -root				    \n\
- @GL_KLUDGE@ GL: 				kaleidocycle -root			    \n\
- @GL_KLUDGE@ GL: 				quasicrystal -root			    \n\
- @GL_KLUDGE@ GL: 				unknownpleasures -root			    \n\
- @GL_KLUDGE@ GL: 				projectiveplane -root			    \n\
--				tessellimage -root			    \n
-+				tessellimage -root			    \n\
-+@GL_KLUDGE@ GL:					tetris -root				    \n
- 
- 
- 
- !=============================================================================
-@@ -505,6 +505,7 @@
- *hacks.whirlwindwarp.name:  WhirlWindWarp
+@@ -354,7 +354,8 @@
+ @GL_KLUDGE@ GL: 				photopile -root				    \n\
+ @GL_KLUDGE@ GL: 				skytentacles -root			    \n\
+ @GL_KLUDGE@ GL: 				rubikblocks -root			    \n\
++@GL_KLUDGE@ GL: 				tetris -root				    \n\
+ @GL_KLUDGE@ GL: 				companioncube -root			    \n\
+ @GL_KLUDGE@ GL: 				hilbert -root				    \n\
+ @GL_KLUDGE@ GL: 				tronbit -root				    \n\
+ @GL_KLUDGE@ GL: 				geodesic -root				    \n\
+@@ -513,6 +513,7 @@
+ *hacks.winduprobot.name:    WindupRobot
  *hacks.xanalogtv.name:      XAnalogTV
  *hacks.xrayswarm.name:      XRaySwarm
 +*hacks.tetris.name:         Tetris

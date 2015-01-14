@@ -1,21 +1,24 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/xscreensaver/xscreensaver-5.26.ebuild,v 1.6 2014/02/23 19:47:54 maekke Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/xscreensaver/xscreensaver-5.32.ebuild,v 1.3 2015/01/01 21:24:39 maekke Exp $
 
 EAPI=5
 inherit autotools eutils flag-o-matic multilib pam
 
 DESCRIPTION="A modular screen saver and locker for the X Window System"
 HOMEPAGE="http://www.jwz.org/xscreensaver/"
-SRC_URI="http://www.jwz.org/xscreensaver/${P}.tar.gz"
+SRC_URI="
+	http://www.jwz.org/xscreensaver/${P}.tar.gz
+"
 
 LICENSE="BSD"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm hppa ~ia64 ~mips ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 arm hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~x64-solaris ~x86-solaris"
 IUSE="gdm jpeg new-login opengl pam +perl selinux suid xinerama"
 
-COMMON_DEPEND="dev-libs/libxml2
+COMMON_DEPEND="
 	>=gnome-base/libglade-2
+	dev-libs/libxml2
 	media-libs/netpbm
 	x11-apps/appres
 	x11-apps/xwininfo
@@ -35,26 +38,31 @@ COMMON_DEPEND="dev-libs/libxml2
 		)
 	opengl? ( virtual/opengl )
 	pam? ( virtual/pam )
-	selinux? ( sec-policy/selinux-xscreensaver )
-	xinerama? ( x11-libs/libXinerama )"
+	xinerama? ( x11-libs/libXinerama )
+"
 # For USE="perl" see output of `qlist xscreensaver | grep bin | xargs grep '::'`
-RDEPEND="${COMMON_DEPEND}
+RDEPEND="
+	${COMMON_DEPEND}
 	perl? (
 		dev-lang/perl
 		dev-perl/libwww-perl
 		virtual/perl-Digest-MD5
-		)"
-DEPEND="${COMMON_DEPEND}
+	)
+	selinux? ( sec-policy/selinux-xscreensaver )
+"
+DEPEND="
+	${COMMON_DEPEND}
 	dev-util/intltool
-	virtual/pkgconfig
 	sys-devel/bc
 	sys-devel/gettext
+	virtual/pkgconfig
 	x11-proto/recordproto
 	x11-proto/scrnsaverproto
 	x11-proto/xextproto
 	x11-proto/xf86miscproto
 	x11-proto/xf86vidmodeproto
-	xinerama? ( x11-proto/xineramaproto )"
+	xinerama? ( x11-proto/xineramaproto )
+"
 
 src_prepare() {
 	sed -i configure.in -e '/^ALL_LINGUAS=/d' || die
@@ -73,7 +81,11 @@ src_prepare() {
 		"${FILESDIR}"/${PN}-5.20-blurb-hndl-test-passwd.patch \
 		"${FILESDIR}"/${PN}-5.20-test-passwd-segv-tty.patch \
 		"${FILESDIR}"/${PN}-5.20-tests-miscfix.patch \
-		"${FILESDIR}"/${PN}-5.26-tetris.patch
+		"${FILESDIR}"/${PN}-5.28-comment-style.patch \
+		"${FILESDIR}"/${PN}-5.31-pragma.patch \
+		"${FILESDIR}"/${PN}-5.32-tetris.patch
+
+	epatch_user
 
 	eautoconf
 	eautoheader
