@@ -16,7 +16,11 @@ LICENSE="Apache-2.0"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 
-DEPEND=""
+DEPEND="
+	dev-python/decorator
+	dev-python/colorama
+	dev-python/psutil
+"
 RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/thefuck-${PV}/thefuck"
