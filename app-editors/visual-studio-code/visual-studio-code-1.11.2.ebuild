@@ -1,12 +1,11 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
 
 EAPI=6
 
 inherit eutils pax-utils
 
-DESCRIPTION="Multiplatform Visual Studio Code from Microsoft"
+DESCRIPTION="Multiplatform Visual Studio Code from EULA MIT"
 HOMEPAGE="https://code.visualstudio.com"
 BASE_URI="https://vscode-update.azurewebsites.net/${PV}"
 SRC_URI="
@@ -15,7 +14,7 @@ SRC_URI="
 	"
 RESTRICT="mirror strip"
 
-LICENSE="Microsoft"
+LICENSE="EULA MIT"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE=""
@@ -32,12 +31,12 @@ RDEPEND="
 	${DEPEND}
 	>=net-print/cups-2.0.0
 	x11-libs/libnotify
+	x11-libs/libXScrnSaver
 "
 
 ARCH=$(uname -m)
 
-[[ ${ARCH} == "x86_64" ]] && S="${WORKDIR}/VSCode-linux-x64"
-[[ ${ARCH} != "x86_64" ]] && S="${WORKDIR}/VSCode-linux-ia32"
+[[ ${ARCH} == "x86_64" ]] && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
 
 QA_PRESTRIPPED="opt/${PN}/code"
 
