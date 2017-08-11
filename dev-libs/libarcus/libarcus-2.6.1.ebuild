@@ -16,7 +16,7 @@ SRC_URI="https://github.com/Ultimaker/${MY_PN}/archive/${PV}.tar.gz -> ${P}.tar.
 LICENSE="AGPL-3+"
 SLOT="0/2"
 IUSE="examples python static-libs"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 
 RDEPEND="${PYTHON_DEPS}
 	dev-python/sip[${PYTHON_USEDEP}]

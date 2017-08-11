@@ -16,7 +16,7 @@ SRC_URI="https://github.com/Ultimaker/${MY_PN}/archive/${MY_PV}.tar.gz -> ${P}.t
 
 LICENSE="AGPL-3+"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="doc test"
 
 RDEPEND="${PYTHON_DEPS}
@@ -53,6 +53,6 @@ src_test() {
 }
 
 src_install() {
-	enable_cmake-utils_src_install
+	cmake-utils_src_install
 	python_optimize "${D}usr/$(get_libdir)"
 }

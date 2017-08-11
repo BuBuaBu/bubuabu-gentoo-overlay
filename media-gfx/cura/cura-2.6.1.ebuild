@@ -12,8 +12,8 @@ MY_PV=${PV/_beta}
 
 DESCRIPTION="A 3D model slicing application for 3D printing"
 HOMEPAGE="https://github.com/Ultimaker/Cura"
-SRC_URI="https://github.com/Ultimaker/${MY_PN}/archive/${MY_PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="~amd64 ~x86"
+SRC_URI="https://github.com/Ultimaker/${MY_PN}/archive/${MY_PV}.tar.gz -> ${P}.tar.gz https://github.com/Ultimaker/Uranium/archive/${MY_PV}.tar.gz -> Uranium-${MY_PV}.tar.gz"
+KEYWORDS="amd64 x86"
 
 LICENSE="AGPL-3+"
 SLOT="0"
@@ -33,6 +33,11 @@ S="${WORKDIR}/${MY_PN}-${MY_PV}"
 PATCHES=( "${FILESDIR}/${P}-fix-install-paths.patch" )
 DOCS=( README.md )
 REQUIRED_USE="${PYTHON_REQUIRED_USE}"
+
+src_prepare() {
+	mv "${WORKDIR}/Uranium-${MY_PV}" "${WORKDIR}/Uranium"
+	default
+}
 
 src_configure() {
 	local mycmakeargs=(

@@ -12,7 +12,7 @@ MY_PV=${PV/_beta}
 DESCRIPTION="A 3D model slicing engine for 3D printing"
 HOMEPAGE="https://github.com/Ultimaker/CuraEngine"
 SRC_URI="https://github.com/Ultimaker/${MY_PN}/archive/${MY_PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 
 LICENSE="AGPL-3"
 SLOT="0"
