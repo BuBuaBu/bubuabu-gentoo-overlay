@@ -34,22 +34,24 @@ RDEPEND="
 	x11-libs/libXScrnSaver
 "
 
-ARCH=$(uname -m)
-
-[[ ${ARCH} == "x86_64" ]] && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
-
 QA_PRESTRIPPED="opt/${PN}/code"
+QA_PREBUILT="opt/${PN}/code"
+
+pkg_setup(){
+	use amd64 && S="${WORKDIR}/VSCode-linux-x64" || S="${WORKDIR}/VSCode-linux-ia32"
+}
 
 src_install(){
 	pax-mark m code
 	insinto "/opt/${PN}"
 	doins -r *
 	dosym "/opt/${PN}/code" "/usr/bin/${PN}"
-	make_wrapper "${PN}" "/opt/${PN}/code"
 	make_desktop_entry "${PN}" "Visual Studio Code" "${PN}" "Development;IDE"
 	doicon ${FILESDIR}/${PN}.png
 	fperms +x "/opt/${PN}/code"
+	fperms +x "/opt/${PN}/bin/code"
 	fperms +x "/opt/${PN}/libnode.so"
+	fperms +x "/opt/${PN}/resources/app/node_modules/vscode-ripgrep/bin/rg"
 	insinto "/usr/share/licenses/${PN}"
 	newins "resources/app/LICENSE.txt" "LICENSE"
 }
