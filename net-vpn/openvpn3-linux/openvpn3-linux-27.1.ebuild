@@ -2,7 +2,9 @@
 
 EAPI=8
 
-inherit git-r3 meson
+PYTHON_COMPAT=( python3_{10..14} )
+
+inherit git-r3 meson python-single-r1
 
 DESCRIPTION="Next generation OpenVPN implementation, building on features available on modern Linux distributions"
 HOMEPAGE="https://community.openvpn.net/openvpn/wiki/OpenVPN3Linux"
@@ -16,6 +18,7 @@ LICENSE="AGPL-3+"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="+openssl mbedtls"
+REQUIRED_USE="${PYTHON_REQUIRED_USE}"
 
 #TODO: selinux
 CDEPEND="mbedtls? ( net-libs/mbedtls:= )
@@ -23,6 +26,7 @@ CDEPEND="mbedtls? ( net-libs/mbedtls:= )
 "
 #TODO: dbus-1, gio-2.0, gio-unix-2.0, libnl-3.0, python3
 RDEPEND="
+	${PYTHON_DEPS}
 	acct-group/openvpn
 	acct-user/openvpn
 	>=dev-libs/tinyxml2-8.0.0
@@ -35,14 +39,29 @@ RDEPEND="
 DEPEND="${RDEPEND}"
 BDEPEND="virtual/pkgconfig"
 
+src_prepare() {
+    default
+    # Remplace la recherche du subproject et la récupération de variable par la dépendance système
+    sed -i -e "s/libfmt = subproject.*/dep_libfmt = dependency('fmt')/" \
+           -e "/dep_libfmt = libfmt.get_variable/d" meson.build
+}
+
 src_configure() {
 	local emesonargs=(
 		-Dunit_tests=disabled
 		-Dtest_programs=disabled
 		-Dselinux=disabled
+                -Ddocdir=/usr/share/doc/${PF}
 		#-Dasio_path='/usr/include'
 	)
 	meson_src_configure
+}
+
+src_install() {
+	meson_src_install
+
+	# Compile les fichiers .py en bytecode pour la version active de Python
+	python_optimize
 }
 
 pkg_postinst() {
